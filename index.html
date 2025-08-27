@@ -1,186 +1,133 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Para Flor 💖</title>
-  <!-- Fuente bonita -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0f172a;         /* azul noche */
-      --card:#111827;       /* gris oscuro */
-      --soft:#1f2937;       /* gris medio */
-      --text:#f9fafb;       /* casi blanco */
-      --accent:#f472b6;     /* rosa */
-      --accent-2:#60a5fa;   /* celeste */
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100dvh; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
-      background: radial-gradient(1200px 600px at 80% -10%, rgba(96,165,250,.25), transparent 60%),
-                  radial-gradient(800px 400px at -10% 110%, rgba(244,114,182,.22), transparent 60%),
-                  var(--bg);
-      color:var(--text);
-      display:grid; place-items:center; padding:24px;
-    }
-    .app{
-      width:100%; max-width:560px; background:linear-gradient(180deg, rgba(255,255,255,.06), transparent 30%), var(--card);
-      border:1px solid rgba(255,255,255,.08); border-radius:24px; padding:24px 20px 18px; box-shadow:0 10px 40px rgba(0,0,0,.35);
-      backdrop-filter: blur(6px);
-    }
-    h1{font-size:clamp(24px, 3.6vw, 32px); margin:0 0 8px; font-weight:600; letter-spacing:.3px}
-    p.lead{margin:0 0 16px; opacity:.9}
-    .btns{display:flex; gap:12px; flex-wrap:wrap}
-    button{
-      flex:1 1 160px; border:0; padding:14px 16px; border-radius:14px; cursor:pointer; font-weight:600; font-size:16px;
-      background:var(--soft); color:var(--text); transition:transform .08s ease, filter .2s ease, background .2s ease;
-      touch-action:manipulation; box-shadow:0 6px 18px rgba(0,0,0,.25);
-    }
-    button:active{ transform:translateY(1px) scale(.99) }
-    .primary{ background: linear-gradient(180deg, var(--accent), #db2777) }
-    .secondary{ background: linear-gradient(180deg, var(--accent-2), #2563eb) }
-    .ghost{ background:transparent; border:1px solid rgba(255,255,255,.16) }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Carta para Manita Flor</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fff7f7;
+    --envelope:#e55353;
+    --envelope-dark:#cc4747;
+    --paper:#ffffff;
+    --text:#7a2222;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100dvh; display:grid; place-items:center;
+    background:radial-gradient(circle at 50% 20%, #ffeaea, var(--bg) 40%, #fff 100%);
+    font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  }
+  .card-wrap{width:min(680px, 92vw); padding:32px 16px}
+  .stage{
+    position:relative; width:100%; aspect-ratio: 16/10; max-height:72vh;
+    display:grid; place-items:center;
+    filter: drop-shadow(0 18px 22px rgba(0,0,0,.12));
+    cursor:pointer;
+  }
 
-    .frame{ border-radius:18px; overflow:hidden; margin:16px 0 12px; background:#000; position:relative }
-    .frame img{ width:100%; max-height:58dvh; object-fit:cover; display:block }
-    .caption{ text-align:center; font-weight:600; padding:10px 8px 0; letter-spacing:.2px }
+  /* Hoja (oculta detrás al inicio) */
+  .paper{
+    position:absolute; top:6%; width:64%; height:68%;
+    background:var(--paper); border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:22px 18px 14px;
+    transform:translateY(0);
+    transition:transform .8s ease, z-index 0s linear .8s; /* z-index cambia después de animación */
+    text-align:center;
+    z-index:1; /* detrás al inicio */
+  }
+  /* Cuando está abierta */
+  .stage.open .paper{ 
+    transform:translateY(-60%);
+    z-index:5; /* delante después de animación */
+    transition:transform .8s ease, z-index 0s; 
+  }
 
-    /* Modal */
-    dialog{ width:min(92vw, 520px); border:none; border-radius:22px; padding:0; background:var(--card); color:var(--text);
-            box-shadow:0 20px 80px rgba(0,0,0,.55) }
-    dialog::backdrop{ background:rgba(0,0,0,.55); backdrop-filter: blur(2px) }
-    .modal-body{ padding:16px }
-    .modal-actions{ display:flex; gap:10px; padding:0 16px 16px }
+  .heart{
+    width:42px; height:42px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #ff7b7b, #ff3b3b 60%, #e31515 100%);
+    margin-bottom:10px;
+  }
+  .message{
+    color:var(--text); font-weight:600;
+    font-size:clamp(16px, 2.2vw, 22px);
+    margin-bottom:14px;
+  }
+  .photo{
+    width:120px; height:120px; border-radius:16px; object-fit:cover;
+    border:3px solid #ffd5d5; box-shadow:0 6px 12px rgba(0,0,0,.12);
+  }
 
-    .hint{ font-size:12px; opacity:.75; text-align:center; margin-top:6px }
-    .badge{ display:inline-flex; align-items:center; gap:8px; font-size:12px; padding:6px 10px; border-radius:999px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04) }
-    .row{ display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap }
-    .spacer{ height:8px }
+  /* Sobre */
+  .envelope{
+    position:relative; width:86%; height:60%;
+    background:linear-gradient(180deg, var(--envelope) 0%, var(--envelope-dark) 100%);
+    border-radius:14px;
+    z-index:2;
+  }
+  .envelope:before, .envelope:after{
+    content:""; position:absolute; inset:auto 0 0 0; height:55%;
+    background:linear-gradient(180deg, #f26b6b, var(--envelope));
+    clip-path:polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%);
+    border-bottom-left-radius:14px; border-bottom-right-radius:14px;
+  }
+  .envelope:after{
+    inset:0; height:58%; background:transparent;
+    clip-path:polygon(0 0, 50% 65%, 100% 0, 100% 12%, 0 12%);
+    border-radius:0;
+    box-shadow: inset 0 22px 0 0 var(--envelope);
+    opacity:.95;
+  }
 
-    /* Accessibility focus */
-    button:focus-visible{ outline:3px solid #fdf2f8; outline-offset:2px }
-  </style>
+  /* Frente */
+  .front{
+    position:absolute; bottom:-8%; left:50%; transform:translateX(-50%);
+    width:72%; background:var(--envelope); color:#fff; border-radius:12px;
+    padding:18px 20px; display:flex; justify-content:space-between; align-items:center;
+    z-index:3;
+  }
+  .stamp{
+    width:54px; height:54px; border-radius:8px; background:#ffd7d7;
+    display:grid; place-items:center; font-size:22px; color:#e22;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,.15));
+  }
+  .tofrom{font-size:clamp(12px, 1.8vw, 16px); font-weight:500}
+  .tofrom b{font-weight:700}
+</style>
 </head>
 <body>
-  <main class="app" role="application" aria-label="App para Flor">
-    <div class="row">
-      <h1>Para la nena Flor ✨</h1>
-      <span class="badge" aria-hidden="true">Hecho con ❤️ & sabiduría de Dios</span>
+
+  <div class="card-wrap">
+    <div class="stage" id="stage">
+      <!-- Papel -->
+      <div class="paper">
+        <div class="heart"></div>
+        <p class="message">LA QUIERO MUCHO MANITA FLOR ❤️❤️</p>
+        <img class="photo" src="miflor.jpeg" alt="Mi Flor">
+      </div>
+
+      <!-- Sobre -->
+      <div class="envelope"></div>
+
+      <!-- Frente -->
+      <div class="front">
+        <div class="tofrom">
+          <div>Para: <b>MI PERSONA FAVORITA FLOR</b></div>
+          <div>De: <b>KIRVIN</b></div>
+        </div>
+        <div class="stamp">❤</div>
+      </div>
     </div>
-    <p class="lead">Toca los botones para ver la imagen y el mensajito especial. Funciona en celular y compu.</p>
+  </div>
 
-    <div class="frame" aria-live="polite">
-      <!--
-        👉 Reemplaza el src de abajo por:
-           1) Una URL directa a tu imagen (por ejemplo, de Imgur/Cloudinary), o
-           2) Coloca el archivo junto a este HTML y usa el nombre, p.ej. "imagen.png".
-      -->
-      <img id="photo" src="imagen.png" alt="Cantante dedicada a Flor" />
-    </div>
+<script>
+  const stage = document.getElementById("stage");
+  stage.addEventListener("click", () => {
+    stage.classList.toggle("open");
+  });
+</script>
 
-    <div class="caption" id="caption">LA NENA DE ARGENTINA, PARA LA NENA FLOR</div>
-
-    <div class="spacer"></div>
-
-    <div class="btns">
-      <button class="primary" id="btnShow">Mostrar imagen</button>
-      <button class="secondary" id="btnPhrase">Ver frase</button>
-      <button class="ghost" id="btnVibrate" title="Vibración corta">Vibrar</button>
-    </div>
-
-    <p class="hint">Sugerencia: mantén pulsado un botón en el celular para sentir vibración (si tu dispositivo lo permite).</p>
-  </main>
-
-  <!-- Modal reutilizable -->
-  <dialog id="modal">
-    <div class="modal-body">
-      <div class="frame"><img id="modalImg" alt="Imagen" /></div>
-      <div class="caption" id="modalText"></div>
-    </div>
-    <div class="modal-actions">
-      <button id="btnClose" class="ghost">Cerrar</button>
-      <button id="btnShare" class="secondary">Compartir</button>
-    </div>
-  </dialog>
-
-  <script>
-    const photo = document.getElementById('photo');
-    const caption = document.getElementById('caption');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    const modalText = document.getElementById('modalText');
-
-    const btnShow = document.getElementById('btnShow');
-    const btnPhrase = document.getElementById('btnPhrase');
-    const btnVibrate = document.getElementById('btnVibrate');
-    const btnClose = document.getElementById('btnClose');
-    const btnShare = document.getElementById('btnShare');
-
-    const FRASE = 'LA NENA DE ARGENTINA, PARA LA NENA FLOR';
-
-    function haptic(ms=25){
-      try{ if (navigator.vibrate) navigator.vibrate(ms); }catch(e){}
-    }
-
-    function openModal(type){
-      // type: 'image' | 'phrase'
-      haptic(10);
-      if(type === 'image'){
-        modalImg.src = photo.currentSrc || photo.src;
-        modalImg.alt = photo.alt || 'Imagen';
-        modalText.textContent = '';
-      }else{
-        modalImg.src = photo.currentSrc || photo.src;
-        modalImg.alt = photo.alt || 'Imagen';
-        modalText.textContent = FRASE;
-      }
-      if(!modal.open) modal.showModal();
-    }
-
-    function closeModal(){ modal.close(); }
-
-    // Botones principales
-    btnShow.addEventListener('click', ()=> openModal('image'));
-    btnPhrase.addEventListener('click', ()=> openModal('phrase'));
-    btnVibrate.addEventListener('click', ()=> haptic(35));
-
-    // Cierre modal
-    btnClose.addEventListener('click', closeModal);
-
-    // Cerrar al hacer clic fuera del contenido
-    modal.addEventListener('click', (e)=>{
-      const dialogRect = modal.getBoundingClientRect();
-      const clickedIn = e.clientX >= dialogRect.left && e.clientX <= dialogRect.right && e.clientY >= dialogRect.top && e.clientY <= dialogRect.bottom;
-      if(!clickedIn) closeModal();
-    });
-
-    // Web Share API (si está disponible)
-    btnShare.addEventListener('click', async ()=>{
-      haptic(15);
-      const shareData = {
-        title: 'Para Flor',
-        text: FRASE,
-        url: window.location.href
-      };
-      try{
-        if(navigator.share){
-          await navigator.share(shareData);
-        }else{
-          // Copia la URL al portapapeles como alternativa
-          await navigator.clipboard.writeText(window.location.href);
-          btnShare.textContent = 'Enlace copiado ✅';
-          setTimeout(()=> btnShare.textContent = 'Compartir', 2000);
-        }
-      }catch(err){
-        console.log('No se pudo compartir', err);
-      }
-    });
-
-    // Accesibilidad: teclas
-    document.addEventListener('keydown', (e)=>{
-      if(e.key === 'Escape' && modal.open) closeModal();
-    });
-  </script>
 </body>
 </html>
